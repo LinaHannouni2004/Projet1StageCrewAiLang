@@ -1,64 +1,36 @@
-from crewai import Agent, Crew, Process, Task
-from crewai.project import CrewBase, agent, crew, task
-from crewai.agents.agent_builder.base_agent import BaseAgent
-from typing import List
-# If you want to run a snippet of code before or after the crew starts,
-# you can use the @before_kickoff and @after_kickoff decorators
-# https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
+from crewai import Crew, Task
+from .agents.research import build_research_agent
+from .agents.analyst import build_analyst_agent
+from .agents.report import build_report_agent
 
-@CrewBase
-class AgenticCrew():
-    """AgenticCrew crew"""
+def build_crew(user_query: str) -> Crew:
+    researcher = build_research_agent()
+    analyst = build_analyst_agent()
+    reporter = build_report_agent()
 
-    agents: List[BaseAgent]
-    tasks: List[Task]
+    t1 = Task(
+        description=f"Use Serper web search to research: {user_query}. Provide sources (URLs).",
+        expected_output="Findings with sources (URLs).",
+        agent=researcher,
+    )
 
-    # Learn more about YAML configuration files here:
-    # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
-    # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
-    
-    # If you would like to add tools to your agents, you can learn more about it here:
-    # https://docs.crewai.com/concepts/agents#agent-tools
-    @agent
-    def researcher(self) -> Agent:
-        return Agent(
-            config=self.agents_config['researcher'], # type: ignore[index]
-            verbose=True
-        )
+    t2 = Task(
+        description="Analyze the findings and extract key insights.",
+        expected_output="Structured insights and summary.",
+        agent=analyst,
+        context=[t1],
+    )
 
-    @agent
-    def reporting_analyst(self) -> Agent:
-        return Agent(
-            config=self.agents_config['reporting_analyst'], # type: ignore[index]
-            verbose=True
-        )
+    t3 = Task(
+        description="Write a professional report with Executive Summary, Key Insights, Technical Analysis, Recommendations. Add sources (URLs).",
+        expected_output="Markdown report with sources.",
+        agent=reporter,
+        context=[t2],
+        output_file="output/final_report.md",
+    )
 
-    # To learn more about structured task outputs,
-    # task dependencies, and task callbacks, check out the documentation:
-    # https://docs.crewai.com/concepts/tasks#overview-of-a-task
-    @task
-    def research_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['research_task'], # type: ignore[index]
-        )
-
-    @task
-    def reporting_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['reporting_task'], # type: ignore[index]
-            output_file='report.md'
-        )
-
-    @crew
-    def crew(self) -> Crew:
-        """Creates the AgenticCrew crew"""
-        # To learn how to add knowledge sources to your crew, check out the documentation:
-        # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
-
-        return Crew(
-            agents=self.agents, # Automatically created by the @agent decorator
-            tasks=self.tasks, # Automatically created by the @task decorator
-            process=Process.sequential,
-            verbose=True,
-            # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
-        )
+    return Crew(
+        agents=[researcher, analyst, reporter],
+        tasks=[t1, t2, t3],
+        verbose=True,
+    )
