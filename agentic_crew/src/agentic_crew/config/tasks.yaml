@@ -1,17 +1,93 @@
+orchestrator_task:
+  description: >
+    Receive the user query and coordinate the multi-agent workflow.
+    Ensure the correct execution order of tasks, delegate responsibilities
+    to the appropriate agents, and maintain a coherent reasoning flow.
+    The orchestrator must supervise the process from query understanding
+    to final structured output.
+  expected_output: >
+    A correctly coordinated workflow execution where the user query
+    is processed through the appropriate reasoning path and produces
+    a structured final result.
+  agent: orchestrator
+
+
+decision_task:
+  description: >
+    Analyze the user query and determine the optimal reasoning strategy.
+    Decide whether the system should:
+    1. Retrieve knowledge from internal documents using RAG
+    2. Perform external research using tools
+    3. Respond directly using reasoning
+
+    Classify the query intent and return the selected decision path
+    (RAG, RESEARCH, or DIRECT).
+  expected_output: >
+    A clear decision indicating the selected reasoning path:
+    RAG, RESEARCH, or DIRECT, along with a brief justification.
+  agent: decision
+  context:
+    - orchestrator_task
+
+
+rag_task:
+  description: >
+    Using the user query, retrieve the most relevant information from
+    internal documents via retrieval-augmented generation (RAG).
+    Focus on extracting accurate, grounded, and contextually relevant
+    knowledge strictly based on available document sources.
+  expected_output: >
+    A set of relevant retrieved knowledge passages from indexed documents
+    that directly relate to the user query, without speculation or
+    unsupported information.
+  agent: rag
+  context:
+    - decision_task
+
+
 research_task:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
+    Perform external research using available tools such as web search,
+    APIs, or external knowledge bases. Gather accurate, relevant, and
+    up-to-date information that complements internal document knowledge.
   expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+    A structured collection of relevant external information and findings
+    related to the user query, suitable for further analysis.
+  agent: research
+  context:
+    - decision_task
 
-reporting_task:
+
+analysis_task:
   description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Analyze and synthesize the collected information from RAG and/or
+    external research. Extract meaningful insights, identify key patterns,
+    and organize the information into a clear and structured understanding
+    of the topic.
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+    A structured analytical summary highlighting key insights, important
+    findings, and meaningful interpretation of the collected knowledge.
+  agent: analyst
+  context:
+    - rag_task
+    - research_task
+
+
+report_task:
+  description: >
+    Generate a professional and structured report based on the analyzed
+    information. The report must include:
+    1. Executive Summary
+    2. Key Insights
+    3. Technical Analysis
+    4. Recommendations
+
+    The output must be clear, logical, and suitable for business or
+    decision-making purposes.
+  expected_output: >
+    A well-structured professional report with clearly separated sections:
+    Executive Summary, Key Insights, Technical Analysis, and Recommendations.
+  agent: report
+  context:
+    - analysis_task
+  output_file: output/final_report.md
