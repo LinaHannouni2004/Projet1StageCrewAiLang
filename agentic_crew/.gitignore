@@ -4,3 +4,19 @@ env/
 __pycache__/
 *.pyc
 .env
+
+# Vector DB (Chroma)
+rag/vector_db/
+*.db
+*.sqlite3
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Output
+output/
+
+# Models
+*.bin
+*.safetensors
