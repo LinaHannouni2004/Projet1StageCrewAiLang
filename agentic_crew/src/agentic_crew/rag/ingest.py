@@ -11,7 +11,8 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(BASE_DIR, "data", "documents")
-CHROMA_PATH = "rag/vector_db"
+CHROMA_PATH = os.path.join(BASE_DIR, "rag", "vector_db")
+
 
 embedding_functions = embedding_functions.SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
 

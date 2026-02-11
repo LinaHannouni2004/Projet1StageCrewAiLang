@@ -115,32 +115,12 @@ class AgenticCrew():
     # CREW
     # =========================
 
+    
+
     @crew
     def crew(self) -> Crew:
 
-    
-        selected_tasks = [
-            self.orchestrator_task(),
-            self.decision_task(),
-    ]
-
-        decision_output = self.decision_task().output
-
-    # Routing intelligent
-        if "RAG" in str(decision_output):
-            selected_tasks.append(self.rag_task())
-            selected_tasks.append(self.analysis_task())
-
-        elif "RESEARCH" in str(decision_output):
-            selected_tasks.append(self.research_task())
-            selected_tasks.append(self.analysis_task())
-
-    
-
-    # Toujours finir par Report
-        selected_tasks.append(self.report_task())
-
-        return Crew(
+        crew = Crew(
         agents=[
             self.orchestrator(),
             self.decision(),
@@ -149,9 +129,14 @@ class AgenticCrew():
             self.analyst(),
             self.report(),
         ],
-        tasks=selected_tasks,
+        tasks=[
+            self.orchestrator_task(),
+            self.decision_task(),
+        ],
         process=Process.sequential,
         verbose=True,
     )
+
+        return crew
 
 

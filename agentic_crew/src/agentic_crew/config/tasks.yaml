@@ -23,6 +23,8 @@ decision_task:
     1. Retrieve knowledge from internal documents using RAG
     2. Perform external research using tools
     3. Respond directly using reasoning
+    4. If the query references internal document or note d’opération → ALWAYS choose RAG
+
 
     Classify the query intent and return the selected decision path
     (RAG, RESEARCH, or DIRECT).
