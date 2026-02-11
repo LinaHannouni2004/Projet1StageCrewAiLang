@@ -19,7 +19,7 @@ def ingest_documents():
 
   client = chromadb.PersistentClient(path=CHROMA_PATH)
 
-  collection = client.get_or_create_collection(name="documents", embedding_function=embedding_functions)
+  collection = client.get_or_create_collection(name="enterprise_rag", embedding_function=embedding_functions)
 
   splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=100)
 

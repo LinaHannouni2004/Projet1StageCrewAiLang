@@ -21,31 +21,39 @@ class AgenticCrew():
     def orchestrator(self) -> Agent:
         return Agent(
             config=self.agents_config['orchestrator'], 
-            verbose=True
+            verbose=True,
+            llm=None 
+        
         )
 
     @agent
     def decision(self) -> Agent:
         return Agent(
             config=self.agents_config['decision'],
-            verbose=True
+            verbose=True,
+            llm=None 
         )
 
     @agent
     def rag(self) -> Agent:
-        return Agent(
-            config=self.agents_config['rag'],
+     rag_tool = RAGTool()
+     return Agent (
+            role="Knowledge Retrieval Agent (RAG Specialist)",
+            goal="Retrieve grounded information from internal documents",
+            backstory="Specialist in enterprise document retrieval using vector search",
             verbose=True,
-            tools=[RAGTool()]
-    
-        )
+            allow_delegation=False,
+            tools=[RAGTool()],
+            llm=None                
+    )
 
     @agent
     def research(self) -> Agent:
         return Agent(
             config=self.agents_config['research'],
             verbose=True,
-            tools=[SerperDevTool()] 
+            tools=[SerperDevTool()],
+            llm=None 
         )
 
     @agent

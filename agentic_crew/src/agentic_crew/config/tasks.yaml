@@ -42,6 +42,7 @@ rag_task:
     internal documents via retrieval-augmented generation (RAG).
     Focus on extracting accurate, grounded, and contextually relevant
     knowledge strictly based on available document sources.
+        DO NOT use external knowledge.
   expected_output: >
     A set of relevant retrieved knowledge passages from indexed documents
     that directly relate to the user query, without speculation or
