@@ -1,6 +1,8 @@
 orchestrator_task:
   description: >
-    Receive the user query and coordinate the multi-agent workflow.
+    Receive the user query :
+    {query}
+    and coordinate the multi-agent workflow.
     Ensure the correct execution order of tasks, delegate responsibilities
     to the appropriate agents, and maintain a coherent reasoning flow.
     The orchestrator must supervise the process from query understanding
@@ -14,7 +16,9 @@ orchestrator_task:
 
 decision_task:
   description: >
-    Analyze the user query and determine the optimal reasoning strategy.
+    Analyze the user query :
+     {query}
+    and determine the optimal reasoning strategy.
     Decide whether the system should:
     1. Retrieve knowledge from internal documents using RAG
     2. Perform external research using tools
@@ -32,7 +36,9 @@ decision_task:
 
 rag_task:
   description: >
-    Using the user query, retrieve the most relevant information from
+    Using the user query:
+     {query}
+    , retrieve the most relevant information from
     internal documents via retrieval-augmented generation (RAG).
     Focus on extracting accurate, grounded, and contextually relevant
     knowledge strictly based on available document sources.
@@ -47,6 +53,8 @@ rag_task:
 
 research_task:
   description: >
+   Perform external research for the following query:
+    {query}
     Perform external research using available tools such as web search,
     APIs, or external knowledge bases. Gather accurate, relevant, and
     up-to-date information that complements internal document knowledge.
@@ -60,6 +68,8 @@ research_task:
 
 analysis_task:
   description: >
+    Analyze and synthesize the collected information related to:
+    {query}
     Analyze and synthesize the collected information from RAG and/or
     external research. Extract meaningful insights, identify key patterns,
     and organize the information into a clear and structured understanding
@@ -75,7 +85,9 @@ analysis_task:
 
 report_task:
   description: >
-    Generate a professional and structured report based on the analyzed
+    Generate a professional and structured report answering: 
+    {query}
+    based on the analyzed
     information. The report must include:
     1. Executive Summary
     2. Key Insights

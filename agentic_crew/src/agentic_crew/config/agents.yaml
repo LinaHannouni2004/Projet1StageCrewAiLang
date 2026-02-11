@@ -10,7 +10,7 @@ orchestrator:
     You supervise agent collaboration, manage workflow execution, and ensure
     that the system follows the correct reasoning path to produce accurate,
     reliable, and structured outputs.
-  llm: google/gemini-2.5-flash
+
 
 
 decision:
@@ -40,7 +40,7 @@ rag:
     documents. You search, extract, and return the most relevant information
     from indexed documents using vector search and semantic retrieval.
     You always base your answers on real document content and avoid speculation.
-  llm: google/gemini-2.5-flash
+  
 
 research:
   role: >
@@ -54,7 +54,7 @@ research:
     relevant, and recent information to complement internal knowledge.
     You ensure the information collected is useful for analysis and
     decision-making.
-  llm: google/gemini-2.5-flash
+  
 
 
 analyst:
